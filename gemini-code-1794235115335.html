@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>國中英語閱讀素養資源庫 (Class 1109) - Junior High English Reader</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Inter & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Soundwave Animation */
+    @keyframes soundwave {
+      0%, 100% { height: 4px; }
+      50% { height: 18px; }
+    }
+    .wave-bar {
+      width: 3px;
+      background-color: #6366f1;
+      border-radius: 9999px;
+      display: inline-block;
+      animation: soundwave 1.2s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(1) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(2) { animation-delay: 0.3s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.5s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
+    /* Reading passage sentence highlight */
+    .reading-highlight {
+      background-color: #fef08a !important;
+      color: #713f12 !important;
+      border-radius: 4px;
+      padding: 1px 3px;
+      transition: background-color 0.2s ease;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo & Title -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-100">
+            <i class="fa-solid fa-book-open-reader text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-slate-900 tracking-tight">國中英語閱讀素養題庫</h1>
+            <p class="text-xs text-slate-500 font-medium">JHS Leveled English Reader &bull; Class 1109 專屬題庫</p>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="flex items-center space-x-2">
+          <button id="add-article-modal-btn" class="inline-flex items-center px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-sm">
+            <i class="fa-solid fa-plus mr-1.5"></i> 新增篇章
+          </button>
+        </div>
+      </div>
+
+      <!-- Level 1 Tabs: Semester Tabs (七上 ~ 九下) -->
+      <nav class="flex space-x-2 overflow-x-auto custom-scrollbar pb-2.5 pt-1" id="semester-tabs-container">
+        <!-- Dynamic rendering via JS -->
+      </nav>
+    </div>
+  </header>
+
+  <!-- Level 2 Navigation: Subcategory Bar -->
+  <section class="bg-slate-100/90 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-500 mr-2 shrink-0">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>分類主題：</span>
+        </div>
+        <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar flex-1 py-1" id="category-tabs-container">
+          <!-- Dynamic rendering via JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Level 3 Navigation: Article Tabs Bar (篇章切換分頁) -->
+  <section class="bg-white border-b border-slate-200 shadow-2xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-indigo-600 mr-2 shrink-0">
+          <i class="fa-solid fa-bookmark"></i>
+          <span>篇章分頁：</span>
+        </div>
+        <div class="flex items-center space-x-1.5 overflow-x-auto custom-scrollbar flex-1 py-1" id="article-tabs-container">
+          <!-- Dynamic rendering via JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Active Info Banner -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-5 pb-3 border-b border-slate-200 gap-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <span id="current-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700">八上</span>
+          <h2 id="current-category-title" class="text-xl font-bold text-slate-900">未來職業與夢想 (Future Plans & Dreams)</h2>
+        </div>
+        <p id="current-category-desc" class="text-sm text-slate-500 mt-1">涵蓋過去進行式、不定詞與動名詞、職業探討與生活敘事。</p>
+      </div>
+
+      <!-- Quick Filter & Counter -->
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <input type="text" id="search-input" placeholder="搜尋本類別篇章..." class="pl-8 pr-4 py-1.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent w-48 sm:w-60">
+          <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-xs text-slate-400"></i>
+        </div>
+        <span id="article-count-badge" class="text-xs bg-slate-200 text-slate-700 font-medium px-2.5 py-1.5 rounded-lg whitespace-nowrap">共 0 篇</span>
+      </div>
+    </div>
+
+    <!-- Active Article Viewport -->
+    <div id="article-viewport">
+      <!-- Dynamic single article rendered here -->
+    </div>
+
+    <!-- Empty State View -->
+    <div id="empty-state" class="hidden text-center py-16 px-4 bg-white rounded-2xl border border-dashed border-slate-300 my-4">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-2xl">
+        <i class="fa-solid fa-folder-open"></i>
+      </div>
+      <h3 class="text-base font-bold text-slate-700">目前尚無篇章內容</h3>
+      <p class="text-sm text-slate-500 mt-1 max-w-sm mx-auto">此學期或分類單元正在建置中，您也可以點擊右上角「新增篇章」直接加入內容。</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-5">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+      <p>國中英語分級閱讀導航系統 &copy; 2026. 支援七至九年級閱讀素養教材整合與自訂擴充。</p>
+    </div>
+  </footer>
+
+  <!-- Modal: Add New Article -->
+  <div id="add-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="font-bold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-file-circle-plus text-indigo-600"></i> 新增閱讀篇章
+        </h3>
+        <button id="close-modal-btn" class="text-slate-400 hover:text-slate-600 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="add-article-form" class="p-6 overflow-y-auto space-y-4 flex-1 custom-scrollbar">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">學期分級</label>
+            <select id="modal-semester" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <option value="7A">七年級上學期 (七上)</option>
+              <option value="7B">七年級下學期 (七下)</option>
+              <option value="8A" selected>八年級上學期 (八上)</option>
+              <option value="8B">八年級下學期 (八下)</option>
+              <option value="9A">九年級上學期 (九上)</option>
+              <option value="9B">九年級下學期 (九下)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">子類別</label>
+            <select id="modal-category" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <option value="cat8A_1">未來職業與夢想 (Future Plans & Dreams)</option>
+              <option value="cat8A_2">睡眠生活與家事 (Sleep & Daily Routine)</option>
+              <option value="cat8A_3">克漏字文法素養評量 (Cloze Test Focus)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-700 mb-1">篇章標題</label>
+            <input type="text" id="modal-title" required placeholder="例: A Dream at Night" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">參考頁碼 / 字數</label>
+            <div class="flex gap-2">
+              <input type="text" id="modal-page" placeholder="Page 1" class="w-1/2 border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <input type="number" id="modal-words" placeholder="130" class="w-1/2 border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">超範單字 (逗號隔開)</label>
+          <input type="text" id="modal-vocab" placeholder="例: choose (v.選擇), suddenly (adv.突然)" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">自訂錄音音檔網址 (選填 MP3 / AAC)</label>
+          <div class="relative">
+            <input type="url" id="modal-audio-url" placeholder="https://example.com/audio.mp3 (留空則預設採用智慧語音朗讀)" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none pl-8">
+            <i class="fa-solid fa-headphones absolute left-2.5 top-2.5 text-xs text-slate-400"></i>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">文章內文 (English Passage)</label>
+          <textarea id="modal-content" rows="6" required placeholder="請輸入閱讀文章英文內文..." class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-sans"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancel-modal-btn" class="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg">取消</button>
+          <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm">儲存篇章</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    const curriculumData = {
+      semesters: [
+        { id: "7A", title: "七上", label: "七年級上學期", active: false },
+        { id: "7B", title: "七下", label: "七年級下學期", active: false },
+        { id: "8A", title: "八上", label: "八年級上學期", active: true },
+        { id: "8B", title: "八下", label: "八年級下學期", active: false },
+        { id: "9A", title: "九上", label: "九年級上學期", active: false },
+        { id: "9B", title: "九下", label: "九年級下學期", active: false }
+      ],
+      categories: {
+        "7A": [],
+        "7B": [],
+        "8A": [
+          { id: "cat8A_1", title: "未來職業與夢想 (Future Plans & Dreams)", icon: "fa-briefcase", desc: "包含探討記者、律師、農夫、牙醫等多元職涯選擇與心路歷程。" },
+          { id: "cat8A_2", title: "睡眠生活與家事 (Sleep & Daily Routine)", icon: "fa-bed", desc: "涵蓋夢境、夢遊、家務分擔與調適焦慮情緒的生活題材。" },
+          { id: "cat8A_3", title: "克漏字文法素養評量 (Cloze Test Focus)", icon: "fa-pen-to-square", desc: "強化過去進行式、動名詞作主詞及動詞搭配之篇章測驗。" }
+        ],
+        "8B": [],
+        "9A": [],
+        "9B": []
+      },
+      // Class 1109 完整 20 篇篇章資料庫
+      articles: [
+        /* 類別一：未來職業與夢想 */
+        {
+          id: "art-1109-1",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 1-3",
+          title: "A Dream at Night",
+          wordCount: 130,
+          extraVocab: ["light (n.; v.燈;光;點亮)", "smart (adj.聰明的)", "test (n.考試)", "wish (n.; v.祝福;願望)"],
+          passage: `It is easy to fall asleep at half past ten.
+Closing your eyes is a good idea for you.
+It is right to put your problems away then.
+Sleeping well helps you start the day new.
+I was resting, and someone broke the dishes.
+I was dreaming about a farmer and a fisherman.
+They were catching fish and making wishes.
+I plan to be a lawyer, and that is my plan.
+Getting butterflies in my stomach is terrible.
+I worry about my future job and test.
+However, keeping a quiet mind is possible.
+It is smart to take a good rest.
+Finally, I was sleeping through the night.
+Then, my pet left the bedroom floor.
+I hope to catch a dream of light,
+And sleepwalk down the stairs no more.`,
+          questions: [
+            { q: "What is the poem mainly about?", options: ["(A) How to become a lawyer in the city.", "(B) The importance of a good night's rest.", "(C) The best way to catch fish in the sea.", "(D) Why pets like to sleep on the floor."], ans: "(B)", explain: "詩歌主要強調將煩惱放下、好好睡個好覺並保持平靜心情的重要性。" },
+            { q: "What happened while the writer was resting?", options: ["(A) A farmer caught a fish.", "(B) Someone broke the dishes.", "(C) The pet walked down the stairs.", "(D) A lawyer called on the phone."], ans: "(B)", explain: "詩中明確提及：'I was resting, and someone broke the dishes.'" },
+            { q: "Why does the writer have \"butterflies in my stomach\"?", options: ["(A) The writer is worried about future plans.", "(B) The writer is sick and needs a doctor.", "(C) The writer ate a terrible bug for dinner.", "(D) The writer feels hungry before going to bed."], ans: "(A)", explain: "文中接著提到：'I worry about my future job and test.'，因此表示對未來感到焦慮與緊張。" },
+            { q: "In the poem, what does \"put your problems away\" mean?", options: ["(A) To stop worrying about difficult things.", "(B) To hide your homework under the bed.", "(C) To keep your ideas in a small drawer.", "(D) To throw your books into the trash."], ans: "(A)", explain: "put your problems away 意指將難題先擱置一旁，不再擔憂難解之事。" },
+            { q: "How does the poem end?", options: ["(A) With a hope for a good dream and safe sleep.", "(B) With a terrible feeling about a new job.", "(C) With a story about a fisherman and his pet.", "(D) With a plan to clean the broken dishes."], ans: "(A)", explain: "結尾提到希望捕捉到光明美夢，且不再夢遊走下樓梯，象徵對安穩好眠的企盼。" }
+          ]
+        },
+        {
+          id: "art-1109-2",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 4-6",
+          title: "Homework on Future Plans",
+          wordCount: 291,
+          extraVocab: ["choose (v.選擇)", "common (adj.常見的;共同的)", "forward (adv.向前)", "have to (phr.必須)", "instead (adv.作為替代)", "noise (n.聲響;噪音)", "suddenly (adv.突然)", "topic (n.主題)"],
+          passage: `It was half past six yesterday evening. I was mopping the stairs. My sister was wiping the window. Suddenly, we heard a terrible noise. Someone broke some dishes! I ran into the kitchen. My sister was crying. Fixing the problem was not easy. It took a quarter of an hour to sweep the floor and dry it. We also had to fix the drawer and close a hole in the wall.
+
+After that, I went to feed my pet. I didn't leave my room to hang clothes. Instead, I looked at my computer monitor. I was almost falling asleep. Suddenly, I remembered my homework. The topic was about our future plan. I got butterflies in my stomach. Worrying about the future is common for junior high school students. It is hard to choose the right job.
+
+I thought about many jobs. Being a dentist is cool. However, I am scared of teeth. My uncle is a truck driver. He drives through the city every day. My aunt is a secretary at a factory. Her boss is a salesman. I want to do something different. I hope to be a reporter. Interviewing people is a good tip to learn about the world. I can talk to a lawyer, a mail carrier, a soldier, or a farmer. A farmer grows food for our country. Maybe I can interview a fisherman. I can also interview a young boy. He sleepwalks at night!
+
+I wrote down my ideas on the web. I put one idea in my notebook to save it. Finally, I finished my homework. I had nothing to worry about. It is a good idea to keep hoping for the future. I will move forward and study hard to catch my dream.`,
+          questions: [
+            { q: "What is the main idea of the reading?", options: ["(A) The writer is thinking about a future job.", "(B) The writer is looking for a pet.", "(C) The writer wants to learn to cook food.", "(D) The writer plans to move to a new city."], ans: "(A)", explain: "文章核心圍繞在作者做完家事後思考未來作業題目，思索各種未來的職業選擇。" },
+            { q: "Which job does the writer NOT mention in the reading?", options: ["(A) A dentist.", "(B) A truck driver.", "(C) A police officer.", "(D) A reporter."], ans: "(C)", explain: "文中提到了牙醫、卡車司機、秘書、銷售員、記者、律師、郵差、軍人、農夫等，唯獨沒有提到警察 (police officer)。" },
+            { q: "Why does the writer want to be a reporter?", options: ["(A) The writer wants to talk to people and learn about the world.", "(B) The writer wants to work in a factory.", "(C) The writer likes to sleepwalk at night.", "(D) The writer is scared of teeth."], ans: "(A)", explain: "文中提到：'Interviewing people is a good tip to learn about the world.'" },
+            { q: "In the reading, the writer says, \"I got butterflies in my stomach.\" What does this mean?", options: ["(A) The writer felt very hungry.", "(B) The writer felt a little nervous.", "(C) The writer ate a bad bug.", "(D) The writer had a terrible stomachache."], ans: "(B)", explain: "butterflies in one's stomach 常用來表達緊張、不安的心理狀態。" },
+            { q: "How does the writer feel about the future at the end of the reading?", options: ["(A) The writer is sad about the dishes.", "(B) The writer is very tired and wants to sleep.", "(C) The writer is angry about the homework.", "(D) The writer has hope and wants to study hard."], ans: "(D)", explain: "文末指出：'It is a good idea to keep hoping for the future. I will move forward and study hard to catch my dream.'" }
+          ]
+        },
+        {
+          id: "art-1109-3",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 7-9",
+          title: "A Letter About Future Plans (Kevin to Tom)",
+          wordCount: 169,
+          extraVocab: ["downstairs (adv.在樓下;往樓下)", "noise (n.聲響;噪音)", "smile (n.; v.微笑)"],
+          passage: `Dear Tom,
+
+How are you? We are junior high school students now. I am writing to tell you about my future plan. It is easy to worry about the future. I get butterflies in my stomach! I hope to find a good job.
+
+Yesterday afternoon, I was wiping the window, and someone broke some dishes downstairs. The noise scared me, and I almost fell! However, it gave me an idea. I want to help people. Being a lawyer is a cool idea, but I do not want to fix terrible problems. Being a truck driver is fun, but driving a truck through the city is hard. My uncle is a farmer. He grows fruit. My aunt is a reporter. She likes to interview people.
+
+Finally, I want to be a dentist. It is great to save bad teeth. I was telling my mom about my dream, and she smiled. What is your dream job? Do you want to be a boss or a salesman? Please write back.
+
+Yours,
+Kevin`,
+          questions: [
+            { q: "What is the main idea of the letter?", options: ["(A) Kevin's uncle is a great farmer.", "(B) Kevin wants to share his dream job.", "(C) Kevin broke some dishes downstairs.", "(D) Kevin's aunt likes to interview people."], ans: "(B)", explain: "Kevin 寫這封信是為了跟 Tom 分享自己對未來夢想職業的思考過程。" },
+            { q: "What was Kevin doing when he heard a noise?", options: ["(A) He was driving a truck.", "(B) He was wiping the window.", "(C) He was fixing a terrible problem.", "(D) He was telling his mom a story."], ans: "(B)", explain: "信中寫道：'Yesterday afternoon, I was wiping the window, and someone broke some dishes downstairs.'" },
+            { q: "Why does Kevin NOT want to be a lawyer?", options: ["(A) He is scared of driving in the city.", "(B) He does not like to deal with bad things.", "(C) He wants to grow fruit like his uncle.", "(D) He gets butterflies in his stomach easily."], ans: "(B)", explain: "Kevin 提到：'Being a lawyer is a cool idea, but I do not want to fix terrible problems.'" },
+            { q: "What does Kevin mean when he writes \"I get butterflies in my stomach\"?", options: ["(A) He feels hungry and wants to eat.", "(B) He caught some bugs in the garden.", "(C) He feels nervous about his future.", "(D) He has a terrible stomachache."], ans: "(C)", explain: "此片語表達對未來感到忐忑不安與緊張。" },
+            { q: "How does Kevin organize his ideas in the letter?", options: ["(A) He shares his worry, talks about different jobs, and chooses one.", "(B) He asks a question, tells a story, and says goodbye.", "(C) He talks about his favorite animals and then his family.", "(D) He lists his bad habits and promises to change them."], ans: "(A)", explain: "信件脈絡為：先表達對未來的擔憂 $\rightarrow$ 逐一檢視各項職業 $\rightarrow$ 最終決定想當牙醫。" }
+          ]
+        },
+        {
+          id: "art-1109-6",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 15-16",
+          title: "Dialogue: Tom and Lisa on Future Jobs",
+          wordCount: 167,
+          extraVocab: ["ask (v.請求;詢問)", "sound (n.聲音)", "wonderful (adj.美好的)"],
+          passage: `Tom: Hi, Lisa! I was reading a book when my mom asked me about my future job. It gave me butterflies in my stomach! I worry about it.
+
+Lisa: Don't worry, Tom. It is not easy to plan your future right now. What is your dream job?
+
+Tom: Well, I hope to be a reporter. Interviewing people is cool. I want to catch good stories in the city. How about you?
+
+Lisa: I was thinking about being a lawyer to help someone with a terrible problem. However, I finally decided to be a farmer.
+
+Tom: A farmer?
+
+Lisa: Yes! Growing healthy food for our country is important. My uncle is a farmer. He was driving his truck when I visited his farm at half past ten yesterday. He gave me a good idea.
+
+Tom: That sounds great. My brother wants to be a dentist, and my sister plans to be a mail carrier.
+
+Lisa: It is wonderful to have different jobs. Every job helps the world!`,
+          questions: [
+            { q: "What are Tom and Lisa mainly talking about?", options: ["(A) Their future jobs and plans.", "(B) How to grow healthy food.", "(C) The best way to catch bugs.", "(D) Their favorite school subjects."], ans: "(A)", explain: "兩人在對話中主要交流彼此未來的目標與夢想職業。" },
+            { q: "What does Lisa want to be in the future?", options: ["(A) A reporter.", "(B) A farmer.", "(C) A lawyer.", "(D) A dentist."], ans: "(B)", explain: "Lisa 表示自己雖然想過當律師，但最後決定當農夫 (farmer)。" },
+            { q: "Why did Tom have \"butterflies in his stomach\"?", options: ["(A) He ate too much healthy food.", "(B) He was sick and needed a doctor.", "(C) He was nervous about his future job.", "(D) He caught some bugs in the city."], ans: "(C)", explain: "Tom 被媽媽問到未來職業時感到不知所措與緊張。" },
+            { q: "What does \"catch\" mean in the dialogue?", options: ["(A) To get a ball in a game.", "(B) To find and report good stories.", "(C) To become sick with a cold.", "(D) To stop someone from running away."], ans: "(B)", explain: "文中 'catch good stories' 指的是發掘與捕捉好新聞報導。" },
+            { q: "How does Lisa feel about different jobs at the end of the dialogue?", options: ["(A) She believes all jobs are helpful to the world.", "(B) She thinks only farmers are important.", "(C) She worries that being a reporter is too hard.", "(D) She feels sad because she cannot be a lawyer."], ans: "(A)", explain: "Lisa 結尾說道：'Every job helps the world!'" }
+          ]
+        },
+        {
+          id: "art-1109-7",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 17-18",
+          title: "Dialogue: Talents and Future Jobs",
+          wordCount: 192,
+          extraVocab: ["have to (phr.必須)", "talent (n.人才;天分)", "true (adj.真實的)"],
+          passage: `Tom: What is your plan for the future, Lisa?
+Lisa: It is my dream to get a cool job. I hope to be a reporter. Interviewing people is fun for me. What about you?
+Tom: I want to be a lawyer. However, I always get butterflies in my stomach. I am scared to speak.
+Lisa: Do not worry. It is easy to practice. Do you have another idea?
+Tom: Yes. Fixing things is my true talent. Yesterday at half past two, I was fixing a drawer when someone broke the dishes.
+Lisa: Was it a terrible problem?
+Tom: Nothing terrible. I finally fixed the drawer. Then I helped them sweep the floor and wipe the window. It is nice to save the day! Maybe I can be a truck driver. I like to drive through the country.
+Lisa: Right! You can keep moving through the city.
+Tom: My dad is a salesman and my uncle is a farmer. They grow food. Last week, I was visiting my uncle when he almost fell asleep on the job.
+Lisa: Oh, I need to leave now. I have to feed my pet.
+Tom: OK. Cool!`,
+          questions: [
+            { q: "What is the main idea of the dialogue?", options: ["(A) Tom and Lisa are sharing tips for feeding a pet.", "(B) Tom and Lisa are fixing a drawer together.", "(C) Tom and Lisa are planning to visit a farmer in the country.", "(D) Tom and Lisa are talking about their future jobs and talents."], ans: "(D)", explain: "對話討論了兩人想從事的職業以及各自具備的專長天分。" },
+            { q: "What was Tom doing when someone broke the dishes?", options: ["(A) He was feeding his pet.", "(B) He was wiping the window.", "(C) He was fixing a drawer.", "(D) He was driving a truck."], ans: "(C)", explain: "Tom 提到：'I was fixing a drawer when someone broke the dishes.'" },
+            { q: "Why is Tom scared to be a lawyer?", options: ["(A) He does not like to study the law.", "(B) He is too busy fixing things.", "(C) He feels very nervous when he speaks.", "(D) He wants to be a reporter instead."], ans: "(C)", explain: "Tom 說：'I always get butterflies in my stomach. I am scared to speak.'" },
+            { q: "Tom says he gets \"butterflies in my stomach.\" What does this mean?", options: ["(A) He feels hungry.", "(B) He feels sick.", "(C) He feels nervous.", "(D) He feels angry."], ans: "(C)", explain: "感到緊張不安 (nervous)。" },
+            { q: "How does the conversation between Tom and Lisa develop?", options: ["(A) They talk about their pets, and then they make a plan for the weekend.", "(B) They argue about the best job, and then they decide to work together.", "(C) They talk about their dream jobs, and then Tom shares his special talent.", "(D) They share their problems at school, and then they go home."], ans: "(C)", explain: "對話先從夢想職業聊起，隨後 Tom 分享了自己修繕物品的特殊天分。" }
+          ]
+        },
+        {
+          id: "art-1109-8",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 19-21",
+          title: "Poem: Dreaming of a Job",
+          wordCount: 211,
+          extraVocab: ["calm (adj.平靜的;冷靜的)", "sink (v.沉沒;n.水槽)", "smile (n.; v.微笑)"],
+          passage: `At half past one, I was almost falling asleep,
+And someone broke the dishes in the sink!
+I was sleepwalking and moving to the city.
+To plan for the future is a cool thing.
+It is easy to see many great jobs.
+Growing food is right for a farmer.
+A truck driver drives through the country.
+A salesman sells things in a factory.
+A reporter interviews a busy boss.
+A secretary fixes a drawer with care.
+A dentist tells you to close your mouth.
+A fisherman catches fish in the sea.
+A soldier saves people from a terrible problem.
+I hope to be a lawyer one day.
+However, I get butterflies in my stomach.
+Worrying is nothing but a dark hole.
+I am scared, but to calm down is right.
+To take a tip and keep a good idea helps.
+At a quarter to two, I was leaving the house,
+And I put the mail by the door.
+I remembered the mail carrier with a smile.
+He was looking at a web on the monitor.
+Finally, I sweep the floor and feed my pet.
+I mop the stairs and wipe the window.
+I dry and hang clothes to help my mom.
+It is time to work and let my future grow!`,
+          questions: [
+            { q: "What is the main idea of the poem?", options: ["(A) The student's dream of moving to a big city.", "(B) The student's housework at home.", "(C) The student's terrible problem with sleepwalking.", "(D) The student's ideas and feelings about different jobs."], ans: "(D)", explain: "全詩鋪陳作者在半夢半醒間對不同行業的思索與未來展望。" },
+            { q: "In the poem, what does the secretary do?", options: ["(A) Sells things in a factory.", "(B) Interviews a busy boss.", "(C) Fixes a drawer with care.", "(D) Saves people from problems."], ans: "(C)", explain: "詩中明確寫道：'A secretary fixes a drawer with care.'" },
+            { q: "Why does the speaker say \"I get butterflies in my stomach\"?", options: ["(A) The speaker is hungry for some food.", "(B) The speaker is sick and needs a doctor.", "(C) The speaker is nervous about being a lawyer.", "(D) The speaker is catching insects in the garden."], ans: "(C)", explain: "作者接著寫想當律師卻感到忐忑緊張。" },
+            { q: "What does \"tip\" mean in the poem?", options: ["(A) A useful piece of advice or help.", "(B) A little extra money for a worker.", "(C) The sharp end of a pen or pencil.", "(D) A gentle push to make something fall."], ans: "(A)", explain: "在此處指實用的建議、訣竅或助益 (A useful piece of advice or help)。" },
+            { q: "How does the writer build the poem?", options: ["(A) By listing jobs from the easiest to the most difficult.", "(B) By starting with a dream and ending with real work.", "(C) By asking questions and answering them one by one.", "(D) By telling a story about a sad mail carrier."], ans: "(B)", explain: "詩歌由夢境開始，描寫各式職業，最後回到現實幫忙做家事並勉勵自己努力。" }
+          ]
+        },
+        {
+          id: "art-1109-9",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 22-23",
+          title: "Future Jobs and a Midnight Dream",
+          wordCount: 189,
+          extraVocab: ["choose (v.選擇)", "storm (n.暴風雨)", "suddenly (adv.突然)"],
+          passage: `Yesterday at half past six, I was sweeping the floor. My sister was moving the chairs, and suddenly, someone broke the dishes in the kitchen. It was my brother! He was washing them. We cleaned up the kitchen. Then, we talked about our future jobs.
+
+Having a good job is important for everyone. It is not easy to plan for the future. My brother hopes to be a dentist. He wants to fix teeth. My sister dreams of being a reporter. She likes to interview people.
+
+What about me? Thinking about my future job gives me butterflies in my stomach. I worry a lot. I have many ideas. Sometimes I want to be a farmer. Growing fruit is fun. Sometimes I want to be a truck driver. Driving across the country is cool. Sometimes I want to be a salesman or a lawyer.
+
+At a quarter to ten, I finally fell asleep. I sleepwalked and had a dream. In my dream, I was a fisherman. I was catching fish on a boat. However, a terrible storm came. I woke up. I still have time to choose the right job!`,
+          questions: [
+            { q: "What is the reading mainly about?", options: ["(A) A student's ideas and worries about future jobs.", "(B) A terrible storm in a small fishing town.", "(C) A family's plan to move to a new country.", "(D) A brother's dream to buy a big truck."], ans: "(A)", explain: "主旨為學生思考與擔憂未來的各項工作選擇。" },
+            { q: "What does it mean when the writer says \"Thinking about my future job gives me butterflies in my stomach\"?", options: ["(A) The writer is hungry and wants to eat.", "(B) The writer is sick and needs to see a doctor.", "(C) The writer feels nervous about the future.", "(D) The writer caught some insects in the garden."], ans: "(C)", explain: "表示對未來的職涯方向感到緊張忐忑。" },
+            { q: "What was the brother doing when the dishes broke?", options: ["(A) He was washing the dishes.", "(B) He was sweeping the floor.", "(C) He was moving the chairs.", "(D) He was interviewing people."], ans: "(A)", explain: "文中指出：'It was my brother! He was washing them.'" },
+            { q: "Why did the writer wake up from the dream?", options: ["(A) Because the writer's brother broke a dish.", "(B) Because the writer had to clean the kitchen.", "(C) Because bad weather happened in the dream.", "(D) Because the writer wanted to be a farmer."], ans: "(C)", explain: "文中提到：'However, a terrible storm came. I woke up.'" },
+            { q: "How does the writer feel at the end of the reading?", options: ["(A) Sad because the dream was terrible.", "(B) Hopeful because there is still time to decide.", "(C) Worried because driving a truck is dangerous.", "(D) Angry because the brother broke the dishes."], ans: "(B)", explain: "文末提及：'I still have time to choose the right job!'，展現樂觀期望。" }
+          ]
+        },
+        {
+          id: "art-1109-11",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 27-29",
+          title: "Poem: My Future Dream",
+          wordCount: 152,
+          extraVocab: ["choose (v.選擇)", "far (adv.; adj.遠)", "feel (v.感到)", "hall (n.大廳;走廊)", "head (n.頭)", "pass (v.傳遞;通過)", "spider (n.蜘蛛)", "test (n.考試)", "true (adj.真實的)"],
+          passage: `It was half past nine,
+I was almost falling asleep in bed.
+I was dreaming about my future plan,
+And many ideas were in my head.
+
+I hope to get a great job one day.
+It is not easy to choose the right way.
+Being a lawyer to help with a problem?
+Or a truck driver to drive far away?
+
+Yesterday, I was sweeping the floor,
+And someone broke the dishes by the door.
+I was wiping the window in the hall,
+And a terrible spider web made me fall!
+
+I was scared, but it gave me a tip,
+Nothing can stop me on my future trip.
+To be a reporter is my true dream,
+To interview a boss or a great team.
+
+It is easy to get butterflies in my stomach,
+To feel worry and to feel sick.
+However, I will keep trying my best,
+And finally pass every future test.`,
+          questions: [
+            { q: "What is the poem mainly about?", options: ["(A) A student's ideas and hopes for future jobs.", "(B) A terrible dream about a spider web.", "(C) The best way to clean the windows and floors.", "(D) The problem of working as a truck driver."], ans: "(A)", explain: "詩歌主要描寫對未來職業的期待、想法與堅持努力的決心。" },
+            { q: "What happened when the writer was wiping the window?", options: ["(A) Someone broke the dishes by the door.", "(B) The writer fell asleep in bed.", "(C) A spider web made the writer fall down.", "(D) A reporter came to interview the writer."], ans: "(C)", explain: "詩中寫道：'I was wiping the window in the hall, And a terrible spider web made me fall!'" },
+            { q: "Why does the writer say, \"It is easy to get butterflies in my stomach\"?", options: ["(A) The writer feels nervous about the future.", "(B) The writer ate a terrible bug by mistake.", "(C) The writer is hungry after sweeping the floor.", "(D) The writer wants to be a doctor to cure sick people."], ans: "(A)", explain: "感到焦慮緊張 (nervous about the future)。" },
+            { q: "What does the word \"tip\" mean in the poem?", options: ["(A) Extra money for a waiter.", "(B) A bad problem to fix.", "(C) The top part of a pencil.", "(D) A useful lesson or idea."], ans: "(D)", explain: "tip 在此指有用的教訓、啟示或想法。" },
+            { q: "How does the writer feel about the future at the end of the poem?", options: ["(A) The writer is too scared to try anything new.", "(B) The writer is angry about taking many tests.", "(C) The writer is brave and ready to do their best.", "(D) The writer feels sad because dreams never come true."], ans: "(C)", explain: "作者表示會全力以赴通過未來的每項考驗，展現勇敢積極的態度。" }
+          ]
+        },
+        {
+          id: "art-1109-14",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 34-35",
+          title: "Housework and a Reporter's Dream",
+          wordCount: 161,
+          extraVocab: ["choose (v.選擇)"],
+          passage: `Yesterday at half past six, I was sweeping the floor, and someone broke some dishes. It was my brother. I helped him wipe the floor. Then, I went to fix my desk drawer. Fixing things is easy for me.
+
+Later, I was thinking about my future plans. It is not easy to choose a good job. Some classmates hope to be dentists, lawyers, or truck drivers. I get butterflies in my stomach. I worry about it. However, I have a cool dream. I want to be a reporter. Interviewing people is a great idea. I can talk to a farmer. The farmer grows fruit. I can also talk to a soldier. The soldier saves people in our country. Maybe I can interview a fisherman, a mail carrier, or a factory boss.
+
+I remember to keep this idea. It is important to help people through a good job. I finally put my worries down. I closed my eyes and almost fell asleep.`,
+          questions: [
+            { q: "What is the main idea of the reading?", options: ["(A) The writer is thinking about a future job.", "(B) The writer wants to fix a desk drawer.", "(C) The writer's brother broke some dishes.", "(D) The writer plans to be a truck driver."], ans: "(A)", explain: "作者在做完家事後思考未來職業方向。" },
+            { q: "What does the writer want to be in the future?", options: ["(A) A news reporter.", "(B) A famous dentist.", "(C) A hard-working farmer.", "(D) A brave soldier."], ans: "(A)", explain: "文中提到：'However, I have a cool dream. I want to be a reporter.'" },
+            { q: "Why does the writer say \"I get butterflies in my stomach\"?", options: ["(A) The writer is hungry for some sweet fruit.", "(B) The writer is nervous about future plans.", "(C) The writer feels sick after eating dinner.", "(D) The writer is excited to clean the floor."], ans: "(B)", explain: "對於選擇未來工作感到忐忑緊張。" },
+            { q: "What does \"this idea\" mean in the last paragraph?", options: ["(A) Helping the brother wipe the floor.", "(B) Becoming a reporter to interview people.", "(C) Fixing the desk drawer at night.", "(D) Going to sleep early every day."], ans: "(B)", explain: "指上一段提到當記者採訪形形色色人物的夢想。" },
+            { q: "How does the writer organize the reading?", options: ["(A) By talking about doing housework and then future dreams.", "(B) By asking questions and giving the answers.", "(C) By telling a story about a fisherman and a boss.", "(D) By listing the problems of being a mail carrier."], ans: "(A)", explain: "先提及家務瑣事，隨後帶出對未來的志向規劃。" }
+          ]
+        },
+        {
+          id: "art-1109-15",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 36-37",
+          title: "My Dream to Be a Reporter",
+          wordCount: 150,
+          extraVocab: ["news (n.新聞;消息)"],
+          passage: `Yesterday at half past six, I was sweeping the floor. My sister was wiping the window when someone broke the dishes. It was my pet cat! It is not easy to clean the terrible floor. After that, I sat down to think about my future plan.
+
+Thinking about the future is cool. Getting a good job is a big dream for me. Many people move to the city to be lawyers, dentists, or secretaries. A farmer grows food in the country. A truck driver drives a truck. However, my dream is to be a reporter.
+
+I like to interview people. Last night, I was watching a news monitor when I got a great idea. I hope to save people and help them with their problems. Talking to a boss or a salesman gives me butterflies in my stomach. But I will keep trying. It is right to follow my dream!`,
+          questions: [
+            { q: "What is the reading mainly about?", options: ["(A) How to clean the floor.", "(B) The writer's terrible pet cat.", "(C) How to interview a boss.", "(D) The writer's future job plan."], ans: "(D)", explain: "主旨在於作者對未來職業的憧憬與規劃。" },
+            { q: "What was the writer doing at half past six yesterday?", options: ["(A) Wiping the window.", "(B) Watching a monitor.", "(C) Breaking the dishes.", "(D) Sweeping the floor."], ans: "(D)", explain: "文中第一句即指出：'Yesterday at half past six, I was sweeping the floor.'" },
+            { q: "Why does the writer want to be a reporter?", options: ["(A) To grow food in the country.", "(B) To drive a truck in the city.", "(C) To fix the dishes in the kitchen.", "(D) To help people with their problems."], ans: "(D)", explain: "作者提到：'I hope to save people and help them with their problems.'" },
+            { q: "What does it mean when the writer says \"Talking to a boss or a salesman gives me butterflies in my stomach\"?", options: ["(A) The writer feels nervous.", "(B) The writer feels sick.", "(C) The writer feels angry.", "(D) The writer feels hungry."], ans: "(A)", explain: "表示跟主管或業務員說話會感到緊張 (nervous)。" },
+            { q: "How does the writer feel about the dream in the end?", options: ["(A) The writer feels sure and wants to follow it.", "(B) The writer thinks it is a bad idea.", "(C) The writer is too scared to try it.", "(D) The writer wants to change it to something easy."], ans: "(A)", explain: "結尾提到：'It is right to follow my dream!'，展現追夢的堅定。" }
+          ]
+        },
+        {
+          id: "art-1109-17",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 39-40",
+          title: "Leo's Special Skill and Future Plan",
+          wordCount: 152,
+          extraVocab: ["helpful (adj.有幫助的)", "hit (v.; n.碰撞;打擊)", "skill (n.技能)"],
+          passage: `Dear Sam,
+
+How are you? I want to talk about my future plan. Last Sunday at half past nine, I was sweeping the floor, and my brother broke some dishes. He was running through the kitchen, and he hit a chair. He was scared. However, it was not a terrible problem. Sweeping the floor was an easy job for me.
+
+Then, I saw a problem with a drawer. It is easy for me to fix things. Fixing the drawer took only a quarter of an hour. Finally, I saved the drawer!
+
+I remember my old dream to be a reporter. However, it gives me butterflies in my stomach to interview people. It is cool to fix things. I want to be a helpful worker. It is my dream to fix trucks for a truck driver. I hope to get a job in a factory. Fixing things is my special skill!
+
+Yours,
+Leo`,
+          questions: [
+            { q: "What is the letter mainly about?", options: ["(A) Leo's new job in a big city.", "(B) Leo's special skill and future job.", "(C) A terrible problem at Leo's school.", "(D) A famous reporter in Leo's country."], ans: "(B)", explain: "信件主要分享 Leo 擅長修繕的技能以及未來想去工廠修卡車的志向。" },
+            { q: "How long did it take Leo to fix the drawer?", options: ["(A) Sixty minutes.", "(B) Thirty minutes.", "(C) Forty-five minutes.", "(D) Fifteen minutes."], ans: "(D)", explain: "a quarter of an hour 即為 15 分鐘。" },
+            { q: "Why does Leo NOT want to be a reporter?", options: ["(A) He is too lazy to write stories.", "(B) He wants to sleep at home all day.", "(C) He is scared of talking to people.", "(D) He thinks the job is too easy for him."], ans: "(C)", explain: "文中提到採訪他人會讓他感到緊張不安：'it gives me butterflies in my stomach to interview people.'" },
+            { q: "What does \"get butterflies in my stomach\" mean in the letter?", options: ["(A) To feel hungry before a big meal.", "(B) To feel nervous about something.", "(C) To catch bugs in the garden.", "(D) To have a terrible stomachache."], ans: "(B)", explain: "代表對某件事感到緊張焦慮。" },
+            { q: "What does Leo think about fixing things?", options: ["(A) It is a dangerous job for young people.", "(B) It is a cool and easy thing for him to do.", "(C) It is a boring thing to do on weekends.", "(D) It is a terrible problem for his family."], ans: "(B)", explain: "Leo 說修東西對他而言既酷又簡單：'It is easy for me to fix things. ... It is cool to fix things.'" }
+          ]
+        },
+        {
+          id: "art-1109-18",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 41-42",
+          title: "Leo's Special Skill and Dream of Farming",
+          wordCount: 154,
+          extraVocab: ["have to (phr.必須)", "skill (n.技能)"],
+          passage: `My name is Leo. Fixing things is my special skill. It is easy for me to find a problem and fix it. Yesterday at half past six, I was fixing a drawer, and my brother broke some dishes in the kitchen. I ran down the stairs. My brother was looking at the dishes on the floor. He had butterflies in his stomach. I told him to cool down.
+
+Then, I started to help. Sweeping the floor is not hard. After that, I had to mop the floor and wipe the window. I also helped to dry and hang the clothes. Finally, I went to feed my pet.
+
+I have a big dream for my future. I hope to get a great job. It is cool to be a reporter, a dentist, or a lawyer. However, I want to be a farmer. Growing food for my country is my plan. I will catch my dream!`,
+          questions: [
+            { q: "What is the reading mainly about?", options: ["(A) A boy's special skills and his dream job.", "(B) A boy's terrible day at a big factory.", "(C) How to fix a window in the kitchen.", "(D) Why a boy wants to be a reporter in the city."], ans: "(A)", explain: "文章主要介紹 Leo 修理東西的特長以及想當農夫的未來抱負。" },
+            { q: "What was Leo doing at half past six yesterday?", options: ["(A) He was fixing a drawer.", "(B) He was sweeping the floor.", "(C) He was feeding his pet.", "(D) He was washing the dishes."], ans: "(A)", explain: "文中提到：'Yesterday at half past six, I was fixing a drawer...'" },
+            { q: "What does it mean when Leo says his brother \"had butterflies in his stomach\"?", options: ["(A) His brother was very hungry.", "(B) His brother wanted to catch a bug.", "(C) His brother ate something terrible.", "(D) His brother felt nervous and worried."], ans: "(D)", explain: "打破盤子後弟弟感到心慌害怕與緊張。" },
+            { q: "In the reading, what does \"cool down\" mean?", options: ["(A) To drink some cold water.", "(B) To open the window for some air.", "(C) To become quiet and less worried.", "(D) To put ice on the floor."], ans: "(C)", explain: "cool down 意為冷靜下來、放鬆情緒。" },
+            { q: "How does the writer organize the reading?", options: ["(A) He shares a secret first, and then talks about his friends.", "(B) He asks a question, answers it, and then talks about his dream.", "(C) He talks about his dream job first, and then tells a story.", "(D) He shares his special skill, tells a story, and then talks about his future."], ans: "(D)", explain: "結構為：點出專長 $\rightarrow$ 敘述打破盤子幫忙的經過 $\rightarrow$ 暢談未來夢想。" }
+          ]
+        },
+        {
+          id: "art-1109-19",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 43-45",
+          title: "Poem: My Special Talent",
+          wordCount: 137,
+          extraVocab: ["area (n.區域)", "corn (n.玉米)", "helpful (adj.有幫助的)", "talent (n.人才;天分)"],
+          passage: `It is easy to fix a drawer.
+It is cool to sweep the floor.
+Wiping the window is my special plan.
+I hope to be a helpful man.
+I was mopping the stairs when someone left.
+I was hanging the clothes and taking a rest.
+I was feeding the pet when I got an idea,
+To find a good job in a beautiful area.
+Having a dream is not a terrible problem.
+It is right to plan for the future today.
+Some hope to be a lawyer or a dentist.
+Some want to be a reporter or a secretary.
+I want to be a farmer to grow sweet corn.
+Or a truck driver driving in the early morning.
+I was worrying about my future when the sun came up.
+Now I keep my talent and never stop.`,
+          questions: [
+            { q: "What is the main idea of the poem?", options: ["(A) The writer is practicing different ways to clean the house.", "(B) The writer is trying to find a lost pet in a new area.", "(C) The writer is complaining about doing too much housework.", "(D) The writer is thinking about how to use their talent for a future job."], ans: "(D)", explain: "詩人藉由日常家事的才能發想未來如何發揮所長從事理想工作。" },
+            { q: "In the poem, what was the writer doing when someone left?", options: ["(A) Wiping the window.", "(B) Feeding the pet.", "(C) Fixing a drawer.", "(D) Mopping the stairs."], ans: "(D)", explain: "詩中明確寫道：'I was mopping the stairs when someone left.'" },
+            { q: "What does the writer mean by \"keep my talent and never stop\" at the end of the poem?", options: ["(A) The writer will never change their mind about moving to the city.", "(B) The writer wants to stop doing housework every morning.", "(C) The writer will continue to work hard to reach their dream.", "(D) The writer plans to stop worrying and sleep all day."], ans: "(C)", explain: "指將會持續努力不懈以實現自己的未來夢想。" },
+            { q: "In the poem, what does the word \"terrible\" mean?", options: ["(A) Very smart.", "(B) Very easy.", "(C) Very quiet.", "(D) Very bad."], ans: "(D)", explain: "terrible 意指糟糕的、極差的 (Very bad)。" },
+            { q: "How does the writer share their ideas in the poem?", options: ["(A) By asking questions and then giving the answers.", "(B) By telling a story about a sad farmer, and then a joke.", "(C) By talking about housework first, and then future job plans."], ans: "(C)", explain: "先以日常家務為引子，進而帶入未來的各項職業規劃。" }
+          ]
+        },
+        {
+          id: "art-1109-20",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 50-51",
+          title: "Dialogue: Leo and Mia on Housework and Dreams",
+          wordCount: 175,
+          extraVocab: ["choose (v.選擇)", "have to (phr.必須)", "housework (n.家事)"],
+          passage: `Leo: What is your future plan, Mia? It is not easy to choose a job.
+Mia: I have a good idea. I want to be a reporter. Interviewing people is cool. What about your dream?
+Leo: I hope to be a lawyer. However, I often get butterflies in my stomach! Speaking to people is a problem for me.
+Mia: Do not worry. You can practice speaking. I called you at half past ten last night, but you did not answer. What were you doing?
+Leo: I was wiping the window, and my brother broke some dishes. I had to sweep the floor. It was a terrible night!
+Mia: I see. I was mopping the stairs, and my pet cat fell asleep. Doing housework is hard. Anyway, do you want to work in a city?
+Leo: Yes. I want to save money and move to a big city.
+Mia: That is a great plan. Maybe you can be a dentist or a salesman.
+Leo: No, being a lawyer is my right choice. I will keep trying!`,
+          questions: [
+            { q: "What are the two students mainly talking about?", options: ["(A) How to do housework quickly.", "(B) Their plans for future jobs.", "(C) The best way to save money.", "(D) Why they like living in the city."], ans: "(B)", explain: "兩人在對話中主要談論未來的理想工作目標。" },
+            { q: "What was Leo doing at half past ten last night?", options: ["(A) He was breaking some dishes.", "(B) He was sweeping the floor.", "(C) He was mopping the stairs.", "(D) He was wiping the window."], ans: "(D)", explain: "Leo 回覆：'I was wiping the window, and my brother broke some dishes.'" },
+            { q: "Why does Leo say \"I often get butterflies in my stomach\"?", options: ["(A) He is nervous about speaking to people.", "(B) He is afraid of bugs in his house.", "(C) He feels hungry after doing housework.", "(D) He is sick and needs to see a doctor."], ans: "(A)", explain: "Leo 接著說：'Speaking to people is a problem for me.'，對公眾說話感到緊張。" },
+            { q: "What does \"terrible\" mean in the reading?", options: ["(A) Very bad.", "(B) Very quiet.", "(C) Very smart.", "(D) Very easy."], ans: "(A)", explain: "terrible 即糟糕、極糟的意思 (Very bad)。" },
+            { q: "How does the dialogue develop?", options: ["(A) They talk about their pets, discuss their school tests, and plan for a trip.", "(B) They argue about housework, call their friends, and go to sleep.", "(C) They share their dream jobs, talk about last night, and return to their future goals.", "(D) They practice for an interview, clean the kitchen, and watch a movie."], ans: "(C)", explain: "兩人先聊夢想職業，接著聊到昨晚家事插曲，最後再度回歸堅定當律師的理想。" }
+          ]
+        },
+        {
+          id: "art-1109-21",
+          semesterId: "8A",
+          categoryId: "cat8A_1",
+          page: "Page 53-55",
+          title: "Thinking About Jobs (Leo to Tom)",
+          wordCount: 166,
+          extraVocab: ["choose (v.選擇)"],
+          passage: `Dear Tom,
+
+How are you? I was thinking about future jobs when you called last night. It is fun to plan for the future. However, choosing the right job is not easy.
+
+My uncle is a reporter. He was interviewing a farmer when the farmer's truck broke down. My uncle helped him fix it! Being a reporter is cool, but it is easy to get butterflies in your stomach before a big interview.
+
+My sister wants to be a dentist, and my brother hopes to be a lawyer. Some people dream of being a truck driver, a mail carrier, or a fisherman. A fisherman catches fish, and a farmer grows food for the country. Every job helps someone.
+
+I plan to be a secretary. I can help a boss in a factory. I was sweeping the floor yesterday when I finally got this idea. What is your dream job? Do you want to be a salesman or a soldier? Remember to tell me!
+
+Yours,
+Leo`,
+          questions: [
+            { q: "What is the main idea of this letter?", options: ["(A) Leo's uncle is looking for a new job in the city.", "(B) Leo is asking Tom to help him fix a truck.", "(C) Leo is sharing his ideas about different jobs.", "(D) Leo wants to find a good factory for his boss."], ans: "(C)", explain: "Leo 透過信件分享自己與身邊家人對不同工作的看法與夢想。" },
+            { q: "What was Leo doing when he decided to be a secretary?", options: ["(A) He was catching fish in the country.", "(B) He was sweeping the floor.", "(C) He was interviewing a farmer.", "(D) He was fixing a truck for his uncle."], ans: "(B)", explain: "信中指出：'I was sweeping the floor yesterday when I finally got this idea.'" },
+            { q: "What does Leo mean when he says \"it is easy to get butterflies in your stomach before a big interview\"?", options: ["(A) Reporters like to catch bugs before work.", "(B) Reporters often feel nervous before an interview.", "(C) People often get sick in a factory.", "(D) People can easily see butterflies in the country."], ans: "(B)", explain: "在重大採訪前記者往往會感到非常緊張 (feel nervous)。" },
+            { q: "In the letter, what does \"fix\" mean?", options: ["(A) To buy something new at a store.", "(B) To hide something in a drawer.", "(C) To throw something in the trash.", "(D) To make something work again."], ans: "(D)", explain: "fix 意為修理好、使壞掉的東西重新運轉 (To make something work again)。" },
+            { q: "How does Leo feel about jobs?", options: ["(A) He thinks every job is important and helps people.", "(B) He thinks only a reporter can make a lot of money.", "(C) He thinks being a dentist is very hard for his sister.", "(D) He thinks working in a factory is a terrible idea."], ans: "(A)", explain: "文中提到：'Every job helps someone.'，認為每份工作皆有其價值。" }
+          ]
+        },
+
+        /* 類別二：睡眠生活與家事 */
+        {
+          id: "art-1109-4",
+          semesterId: "8A",
+          categoryId: "cat8A_2",
+          page: "Page 10-12",
+          title: "A Letter About Sleep Problems (Leo to Mark)",
+          wordCount: 160,
+          extraVocab: ["downstairs (adv.在樓下;往樓下)", "suddenly (adv.突然)"],
+          passage: `Dear Mark,
+
+How are you? I am writing to talk about my sleep problem. I moved to a new city, and it is hard to fall asleep here. Getting enough sleep is important. However, I have terrible dreams almost every night.
+
+At half past one last night, I was having a bad dream. I had a dream about my future job. I wanted to be a lawyer, but I got butterflies in my stomach. I was worrying about my plan, and suddenly someone broke some dishes downstairs. I woke up right away!
+
+I have another problem. A few days ago, I was sleepwalking, and my mom caught me. She told me to cool down and take it easy. It is a good idea to put a sleep monitor by my bed. My doctor also gave me a tip. He told me to stop worrying about the future. I hope to get better soon. Do you have any ideas?
+
+Yours,
+Leo`,
+          questions: [
+            { q: "What is the main idea of the letter?", options: ["(A) Leo wants to be a lawyer in a new city.", "(B) Leo is having trouble with his sleep and dreams.", "(C) Leo's mother wants to buy a new sleep monitor.", "(D) Leo broke some dishes while he was sleepwalking."], ans: "(B)", explain: "信件主旨為 Leo 搬到新城市後所遇到的睡眠困擾與惡夢問題。" },
+            { q: "What happened when Leo was worrying about his plan in his sleep?", options: ["(A) His doctor gave him a tip.", "(B) Someone broke dishes downstairs.", "(C) His mother caught him on the stairs.", "(D) He put a sleep monitor by his bed."], ans: "(B)", explain: "信中寫道：'I was worrying about my plan, and suddenly someone broke some dishes downstairs.'" },
+            { q: "What does the doctor mean by his tip for Leo?", options: ["(A) Leo should plan his future job carefully.", "(B) Leo's bad sleep comes from his worries.", "(C) Leo needs to drink more water before bed.", "(D) Leo must stop sleepwalking in the house."], ans: "(B)", explain: "醫生建議他不要再為未來過度焦慮，代表不良睡眠源於內心的擔憂。" },
+            { q: "In the letter, what does \"got butterflies in my stomach\" mean?", options: ["(A) Felt very hungry.", "(B) Felt sick and terrible.", "(C) Felt nervous and worried.", "(D) Felt happy and excited."], ans: "(C)", explain: "指感到緊張與焦慮 (Felt nervous and worried)。" },
+            { q: "How does Leo end his letter to Mark?", options: ["(A) By thanking Mark for his help.", "(B) By sharing a story about his future job.", "(C) By telling Mark to visit him in the new city.", "(D) By asking Mark for some ideas."], ans: "(D)", explain: "Leo 在結尾詢問 Mark：'Do you have any ideas?'，向朋友尋求建議。" }
+          ]
+        },
+        {
+          id: "art-1109-5",
+          semesterId: "8A",
+          categoryId: "cat8A_2",
+          page: "Page 13-14",
+          title: "Overcoming Sleepwalking and Bad Dreams",
+          wordCount: 174,
+          extraVocab: ["dangerous (adj.危險的)", "giant (adj.巨大的)", "suddenly (adv.突然)", "tonight (adv.; n.今晚)"],
+          passage: `It is not easy to get a good sleep. Last night at half past ten, I was trying to fall asleep. However, I was worrying about my future. Thinking about future jobs gives me butterflies in my stomach. Do I want to be a lawyer, a reporter, a dentist, or a truck driver?
+
+Finally, I fell asleep. I had a terrible dream. In the dream, I was moving to a big city. I was wiping a window, and suddenly a giant bird broke it. I was running away, but I fell into a hole.
+
+Then, I woke up. I was not in my bed. I was standing by the stairs. My father was mopping the floor. He looked at me. I was sleepwalking!
+
+It is dangerous to sleepwalk. My father gave me a tip. He told me to do something quiet before bed. Now, I plan to feed my pet, sweep the floor, and hang the clothes to dry. Doing these things helps me cool down. I hope to have a good dream tonight.`,
+          questions: [
+            { q: "What is the main idea of the reading?", options: ["(A) Doing housework is the best way to get a job.", "(B) It is important to choose a good job in the future.", "(C) A student finds a way to stop having bad dreams.", "(D) A father wants his child to be a truck driver."], ans: "(C)", explain: "文章主要描述學生從惡夢與夢遊中，藉由父親的建議找到讓自己睡前平靜下來的方法。" },
+            { q: "What was the student doing in the dream?", options: ["(A) Mopping the floor by the stairs.", "(B) Wiping a window in a big city.", "(C) Feeding a pet in the bedroom.", "(D) Hanging clothes to dry in the yard."], ans: "(B)", explain: "文中提到：'In the dream, I was moving to a big city. I was wiping a window...'" },
+            { q: "Why did the student have butterflies in the stomach?", options: ["(A) The student was hungry at half past ten.", "(B) The student was scared of the giant bird.", "(C) The student was nervous about future jobs.", "(D) The student was tired after sweeping the floor."], ans: "(C)", explain: "文中寫道：'Thinking about future jobs gives me butterflies in my stomach.'" },
+            { q: "What does \"cool down\" mean in the reading?", options: ["(A) To become calm and relaxed.", "(B) To feel cold in the winter.", "(C) To drink some cold water.", "(D) To catch a terrible cold."], ans: "(A)", explain: "cool down 指沉澱心情、平靜放鬆。" },
+            { q: "What happens after the student wakes up from the dream?", options: ["(A) The student falls into a deep hole.", "(B) The student breaks a window in the city.", "(C) The student decides to be a reporter.", "(D) The student gets a tip from the father."], ans: "(D)", explain: "醒來後父親給了他一個實用的建議 (tip)。" }
+          ]
+        },
+
+        /* 類別三：克漏字文法素養評量 */
+        {
+          id: "art-1109-10",
+          semesterId: "8A",
+          categoryId: "cat8A_3",
+          page: "Page 24-26",
+          title: "Cloze: Finding the Right Skills for the Future",
+          wordCount: 232,
+          extraVocab: ["machine (n.機器)", "nature (n.大自然)", "share (v.分享)", "skill (n.技能)", "spider (n.蜘蛛)", "useful (adj.有用的)", "vegetable (n.蔬菜)"],
+          passage: `Hello! I am a junior high school student. I want to share my skills and my future plan. Everyone has a special skill. For example, fixing things is easy for me. Yesterday afternoon, I _(1)_ a drawer, and my brother broke some dishes in the kitchen! He was crying. I went to the kitchen and helped him. It is useful to have a good skill. I plan to work in a factory and fix machines.
+
+My friends also have cool skills. My friend, Tom, is good at cleaning. He can sweep the floor, mop the stairs, and wipe the window. It is easy for him _(2)_ the house clean. He hopes to be a secretary and help his boss. My other friend, Mary, loves to talk to people. She wants to be a reporter. She plans to _(3)_ famous people.
+
+What about you? Do you get butterflies in your stomach about your future? Do not worry. It is important to find your skill. You can practice your skills every day. For example, my cousin likes plants. He was growing vegetables on the farm, and a spider _(4)_ down from a web. He was not scared. He loves nature. He hopes to be a farmer.
+
+We can use our skills to help our country. Do you remember your dreams? _(5)_ your skills is a great idea. Finally, you will find the right job!`,
+          questions: [
+            { q: "(1) 選出最適當的動詞時態", options: ["(A) fix", "(B) was fixing", "(C) am fixing", "(D) fixed"], ans: "(B)", explain: "過去進行式搭配過去時間副詞與伴隨動作：'Yesterday afternoon, I was fixing a drawer, and my brother broke...'" },
+            { q: "(2) 選出最適當的文法形式", options: ["(A) to keep", "(B) kept", "(C) keep", "(D) keeping"], ans: "(A)", explain: "虛主詞句型：It is + adj. + for sb + to V.，故選 to keep。" },
+            { q: "(3) 選出最適當的動詞形式", options: ["(A) interviews", "(B) interviewing", "(C) interview", "(D) interviewed"], ans: "(C)", explain: "動詞 plan 後接不定詞：plans to interview。" },
+            { q: "(4) 選出最適當的動詞時態", options: ["(A) fall", "(B) fell", "(C) falls", "(D) is falling"], ans: "(B)", explain: "過去事件敘述，蜘蛛掉下來使用過去式 fell。" },
+            { q: "(5) 選出最適當的動名詞主詞", options: ["(A) Practice", "(B) Practiced", "(C) Practicing", "(D) Practices"], ans: "(C)", explain: "動名詞當作整個句子的主詞：Practicing your skills is a great idea。" }
+          ]
+        },
+        {
+          id: "art-1109-12",
+          semesterId: "8A",
+          categoryId: "cat8A_3",
+          page: "Page 26-27",
+          title: "Cloze: Future Jobs and Plans",
+          wordCount: 115,
+          extraVocab: ["dish (n.菜餚)", "suddenly (adv.突然)", "vegetable (n.蔬菜)"],
+          passage: `Yesterday afternoon, I _(1)_ the floor, and my brother suddenly broke a dish. He was scared. I helped him clean it up. Then, we talked about our future jobs. "It is not easy _(2)_ a good job," he said. He wants to be a lawyer, but he gets butterflies in his stomach in front of people. I told him my plan. I hope _(3)_ a reporter in the future. _(4)_ people is my dream. Our classmate, Mary, wants to be a farmer. She plans to grow vegetables for our country. _(5)_ a dentist is my friend's idea. He likes to fix problems. We have many ideas. However, it is important to keep _(6)_ hard.`,
+          questions: [
+            { q: "(1) 選出正確動詞時態", options: ["(A) am sweeping", "(B) sweep", "(C) to sweep", "(D) was sweeping"], ans: "(D)", explain: "過去進行式表示過去某個特定時間點正在進行的動作。" },
+            { q: "(2) 選出正確文法形式", options: ["(A) get", "(B) getting", "(C) to get", "(D) got"], ans: "(C)", explain: "It is + adj. + to V. 虛主詞真主詞句型。" },
+            { q: "(3) 選出正確動詞搭配", options: ["(A) to be", "(B) being", "(C) be", "(D) am"], ans: "(A)", explain: "hope 後方接不定詞 to V. 作受詞：hope to be。" },
+            { q: "(4) 選出正確動詞形式", options: ["(A) Interview", "(B) Interviews", "(C) Interviewing", "(D) Interviewed"], ans: "(C)", explain: "動名詞 Interviewing 當句首主詞。" },
+            { q: "(5) 選出正確句首動名詞", options: ["(A) Being", "(B) Be", "(C) Am", "(D) Was"], ans: "(A)", explain: "動名詞片語 Being a dentist 作為句首主詞。" },
+            { q: "(6) 選出正確動詞形式", options: ["(A) work", "(B) working", "(C) works", "(D) worked"], ans: "(B)", explain: "keep 後方接動名詞 V-ing 表示持續進行：keep working hard。" }
+          ]
+        },
+        {
+          id: "art-1109-13",
+          semesterId: "8A",
+          categoryId: "cat8A_3",
+          page: "Page 30-31",
+          title: "Cloze: Planning for the Future",
+          wordCount: 110,
+          extraVocab: ["news (n.新聞;消息)"],
+          passage: `Everyone has a plan for the future. _(1)_ to dream about it. Yesterday afternoon, I _(2)_ my homework. My friend called me. We talked about different jobs. My friend wants to be a dentist. However, my dream is to be a reporter. I enjoy _(3)_ people. _(4)_ about this job gives me butterflies in my stomach! Later, my mom _(5)_ the window. I told her my idea. She gave me one good tip. It is not easy _(6)_ this job. I need to read more news. I also need to keep learning. Finally, I hope to save money. Then I can move to a big city and catch my dream!`,
+          questions: [
+            { q: "(1) 選出正確虛主詞句型", options: ["(A) He is easy", "(B) That is easy", "(C) There is easy", "(D) It is easy"], ans: "(D)", explain: "It is easy to dream about it. (以 It 作虛主詞引導後面的不定詞)" },
+            { q: "(2) 選出正確過去進行式", options: ["(A) do", "(B) am doing", "(C) to do", "(D) was doing"], ans: "(D)", explain: "Yesterday afternoon 描述正在做功課時朋友打來：was doing。" },
+            { q: "(3) 選出正確動名詞受詞", options: ["(A) interviewing", "(B) interview", "(C) to interview", "(D) interviews"], ans: "(A)", explain: "動詞 enjoy 後面習慣接動名詞 V-ing 作受詞。" },
+            { q: "(4) 選出正確動名詞主詞", options: ["(A) Thinking", "(B) Think", "(C) Thought", "(D) Thinks"], ans: "(A)", explain: "Thinking about this job (動名詞當主詞，視為單數)。" },
+            { q: "(5) 選出正確過去進行式", options: ["(A) was wiping", "(B) is wiping", "(C) wipes", "(D) to wipe"], ans: "(A)", explain: "敘述過去當時媽媽正在擦窗戶：was wiping。" },
+            { q: "(6) 選出正確不定詞", options: ["(A) to get", "(B) gets", "(C) got", "(D) get"], ans: "(A)", explain: "It is not easy to get this job. (It is + adj. + to V.)" }
+          ]
+        },
+        {
+          id: "art-1109-16",
+          semesterId: "8A",
+          categoryId: "cat8A_3",
+          page: "Page 38-39",
+          title: "Cloze: My Special Skill and Dream Job",
+          wordCount: 164,
+          extraVocab: ["accident (n.意外)", "ask (v.請求;詢問)", "skill (n.技能)", "smartphone (n.智慧型手機)", "suddenly (adv.突然)", "truth (n.真相)"],
+          passage: `It is important to have a special skill for a future job. My classmates often talk about their dreams. Someone wants to be a great lawyer. Another hopes to be a truck driver. However, my dream is different. I want to be a reporter.
+
+Yesterday at half past ten, I _(1)_ the floor. Suddenly, my brother ran into my room. He was very scared. He broke some dishes in the kitchen. He asked me for a tip. It is easy _(2)_ him down. I listened to his problem carefully. Asking questions and finding the truth is my special skill.
+
+Last week, I _(3)_ my pet dog on the street. Suddenly, I saw a terrible car accident. I took out my smartphone and started _(4)_ pictures. I was interviewing people there. Finally, I put the video on the web.
+
+I plan _(5)_ a good reporter in the future. I get butterflies in my stomach. I worry about it sometimes. But I will keep _(6)_ hard.`,
+          questions: [
+            { q: "(1) 選出適當的過去進行式", options: ["(A) sweep", "(B) swept", "(C) was sweeping", "(D) am sweeping"], ans: "(C)", explain: "Yesterday at half past ten 表示過去特定時間點正在進行的動作。" },
+            { q: "(2) 選出適當的不定詞", options: ["(A) cool", "(B) cooling", "(C) cooled", "(D) to cool"], ans: "(D)", explain: "It is easy to cool him down. (It is + adj. + to V.)" },
+            { q: "(3) 選出適當的過去進行式", options: ["(A) feed", "(B) fed", "(C) was feeding", "(D) am feeding"], ans: "(C)", explain: "過去某個時間正在餵狗時突然目睹車禍：was feeding。" },
+            { q: "(4) 選出適當的動詞形式", options: ["(A) take", "(B) taking", "(C) took", "(D) takes"], ans: "(B)", explain: "start 後方可接動名詞：started taking pictures。" },
+            { q: "(5) 選出適當的不定詞", options: ["(A) be", "(B) being", "(C) to be", "(D) am"], ans: "(C)", explain: "plan 後接不定詞：plan to be a good reporter。" },
+            { q: "(6) 選出適當的動名詞", options: ["(A) work", "(B) worked", "(C) working", "(D) to work"], ans: "(C)", explain: "keep 後接動名詞表示持續：keep working hard。" }
+          ]
+        },
+        {
+          id: "art-1109-22",
+          semesterId: "8A",
+          categoryId: "cat8A_3",
+          page: "Page 52-53",
+          title: "Cloze: Sleep and Dreams",
+          wordCount: 134,
+          extraVocab: ["cellphone (n.手機)", "habit (n.習慣)", "helpful (adj.有幫助的)"],
+          passage: `It is important _(1)_ a lot of sleep for your health. Last night, I was sleeping in my bed. I _(2)_ a terrible dream. In the dream, I was driving a truck, and someone _(3)_ to catch me. I woke up at half past two. It is not easy _(4)_ asleep again after a bad dream. However, I had a good idea to cool down. I started to think about my future job. I hope to be a reporter. _(5)_ about my plan is helpful. Finally, I fell asleep again.
+
+Sometimes, people sleepwalk during a dream. My brother was sleepwalking last week. I opened my door. He _(6)_ the floor in the dark! _(7)_ a good sleep habit is good for you. It is a good idea to put away your cellphone at night.`,
+          questions: [
+            { q: "(1) 選出適當的不定詞", options: ["(A) to get", "(B) gets", "(C) got", "(D) get"], ans: "(A)", explain: "It is important to get a lot of sleep... (It is + adj. + to V.)" },
+            { q: "(2) 選出適當的過去進行式", options: ["(A) was having", "(B) have", "(C) am having", "(D) to have"], ans: "(A)", explain: "昨晚正在睡覺時正做著一個可怕的夢：was having a terrible dream。" },
+            { q: "(3) 選出適當的過去進行式", options: ["(A) was trying", "(B) is trying", "(C) tries", "(D) to try"], ans: "(A)", explain: "夢境中的進行狀態：someone was trying to catch me。" },
+            { q: "(4) 選出適當的不定詞", options: ["(A) fall", "(B) fell", "(C) to fall", "(D) falling"], ans: "(C)", explain: "It is not easy to fall asleep again." },
+            { q: "(5) 選出適當的動名詞主詞", options: ["(A) Think", "(B) Thinking", "(C) Thought", "(D) Thinks"], ans: "(B)", explain: "動名詞 Thinking 作為該句主詞。" },
+            { q: "(6) 選出適當的過去進行式", options: ["(A) sweep", "(B) sweeps", "(C) is sweeping", "(D) was sweeping"], ans: "(D)", explain: "他當時正在黑暗中掃地：was sweeping the floor。" },
+            { q: "(7) 選出適當的動名詞主詞", options: ["(A) Keep", "(B) Kept", "(C) Keeps", "(D) Keeping"], ans: "(D)", explain: "Keeping a good sleep habit (動名詞片語當主詞)。" }
+          ]
+        }
+      ]
+    };
+
+    // Global App State
+    let currentSemesterId = "8A";
+    let currentCategoryId = "cat8A_1";
+    let activeArticleId = null;
+    let currentMode = "passage"; // 'passage' or 'quiz'
+    let searchQuery = "";
+
+    // Quiz State Store: { [articleId]: { [questionIndex]: selectedOption } }
+    const userAnswers = {};
+
+    // Audio Controller State
+    const audioState = {
+      isPlaying: false,
+      isPaused: false,
+      rate: 1.0,
+      mode: 'tts',
+      selectedVoice: null
+    };
+
+    function initSpeechSynthesisVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const setVoice = () => {
+        const voices = window.speechSynthesis.getVoices();
+        const usVoice = voices.find(v => v.lang.replace('_', '-') === 'en-US' && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Jenny')))
+                     || voices.find(v => v.lang.replace('_', '-') === 'en-US')
+                     || voices.find(v => v.lang.startsWith('en'));
+        if (usVoice) audioState.selectedVoice = usVoice;
+      };
+      setVoice();
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = setVoice;
+      }
+    }
+    initSpeechSynthesisVoices();
+
+    // DOM Elements
+    const semesterTabsContainer = document.getElementById("semester-tabs-container");
+    const categoryTabsContainer = document.getElementById("category-tabs-container");
+    const articleTabsContainer = document.getElementById("article-tabs-container");
+    const articleViewport = document.getElementById("article-viewport");
+    const emptyState = document.getElementById("empty-state");
+    const currentBadge = document.getElementById("current-badge");
+    const currentCategoryTitle = document.getElementById("current-category-title");
+    const currentCategoryDesc = document.getElementById("current-category-desc");
+    const articleCountBadge = document.getElementById("article-count-badge");
+    const searchInput = document.getElementById("search-input");
+
+    // Modal elements
+    const addModal = document.getElementById("add-modal");
+    const addArticleModalBtn = document.getElementById("add-article-modal-btn");
+    const closeModalBtn = document.getElementById("close-modal-btn");
+    const cancelModalBtn = document.getElementById("cancel-modal-btn");
+    const addArticleForm = document.getElementById("add-article-form");
+
+    // Level 1: Semesters
+    function renderSemesterTabs() {
+      semesterTabsContainer.innerHTML = "";
+      curriculumData.semesters.forEach(sem => {
+        const isActive = sem.id === currentSemesterId;
+        const btn = document.createElement("button");
+        btn.className = `px-4 py-2 text-sm font-semibold rounded-xl whitespace-nowrap transition-all duration-200 flex items-center gap-1.5 ${
+          isActive 
+            ? "bg-indigo-600 text-white shadow-sm" 
+            : "text-slate-600 hover:text-indigo-600 hover:bg-slate-100"
+        }`;
+        btn.innerHTML = `<span>${sem.title}</span><span class="text-[11px] font-normal opacity-85 hidden sm:inline">(${sem.label})</span>`;
+        btn.onclick = () => selectSemester(sem.id);
+        semesterTabsContainer.appendChild(btn);
+      });
+    }
+
+    function selectSemester(semesterId) {
+      currentSemesterId = semesterId;
+      const categories = curriculumData.categories[semesterId] || [];
+      currentCategoryId = categories.length > 0 ? categories[0].id : null;
+      renderSemesterTabs();
+      renderCategoryTabs();
+      renderArticleTabsAndContent();
+    }
+
+    // Level 2: Categories
+    function renderCategoryTabs() {
+      categoryTabsContainer.innerHTML = "";
+      const categories = curriculumData.categories[currentSemesterId] || [];
+
+      if (categories.length === 0) {
+        categoryTabsContainer.innerHTML = `<span class="text-xs text-slate-400 italic py-1">此年級暫無子分類單元</span>`;
+        return;
+      }
+
+      categories.forEach(cat => {
+        const isActive = cat.id === currentCategoryId;
+        const btn = document.createElement("button");
+        btn.className = `px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
+          isActive 
+            ? "bg-white text-indigo-700 shadow-xs border border-indigo-200" 
+            : "text-slate-600 hover:bg-white/60 hover:text-slate-900"
+        }`;
+        btn.innerHTML = `<i class="fa-solid ${cat.icon} text-xs ${isActive ? "text-indigo-600" : "text-slate-400"}"></i><span>${cat.title}</span>`;
+        btn.onclick = () => {
+          currentCategoryId = cat.id;
+          renderCategoryTabs();
+          renderArticleTabsAndContent();
+        };
+        categoryTabsContainer.appendChild(btn);
+      });
+    }
+
+    function getCurrentCategoryArticles() {
+      return curriculumData.articles.filter(item => {
+        const matchSem = item.semesterId === currentSemesterId;
+        const matchCat = currentCategoryId ? item.categoryId === currentCategoryId : true;
+        const matchSearch = searchQuery.trim() === "" || 
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+          item.passage.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchSem && matchCat && matchSearch;
+      });
+    }
+
+    // Level 3 & Level 4: Render Article Tabs & Active Viewport
+    function renderArticleTabsAndContent() {
+      const activeSem = curriculumData.semesters.find(s => s.id === currentSemesterId);
+      const activeCategories = curriculumData.categories[currentSemesterId] || [];
+      const activeCat = activeCategories.find(c => c.id === currentCategoryId);
+
+      currentBadge.textContent = activeSem ? activeSem.title : "";
+      if (activeCat) {
+        currentCategoryTitle.textContent = activeCat.title;
+        currentCategoryDesc.textContent = activeCat.desc;
+      } else {
+        currentCategoryTitle.textContent = "未指定分類或暫無內容";
+        currentCategoryDesc.textContent = "請從上方選單選取分級或自行新增題庫文章。";
+      }
+
+      const articles = getCurrentCategoryArticles();
+      articleCountBadge.textContent = `共 ${articles.length} 篇`;
+      articleTabsContainer.innerHTML = "";
+
+      if (articles.length === 0) {
+        activeArticleId = null;
+        articleViewport.innerHTML = "";
+        articleViewport.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      articleViewport.classList.remove("hidden");
+
+      if (!articles.some(a => a.id === activeArticleId)) {
+        activeArticleId = articles[0].id;
+      }
+
+      // Render Level 3 Tabs
+      articles.forEach((art, idx) => {
+        const isActive = art.id === activeArticleId;
+        const btn = document.createElement("button");
+        btn.className = `px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 ${
+          isActive
+            ? "bg-indigo-600 text-white shadow-xs"
+            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+        }`;
+        btn.innerHTML = `<span class="opacity-70 text-[10px]">#${idx + 1}</span> <span>${art.title}</span>`;
+        btn.onclick = () => {
+          stopAudio();
+          activeArticleId = art.id;
+          renderArticleTabsAndContent();
+        };
+        articleTabsContainer.appendChild(btn);
+      });
+
+      const activeArt = articles.find(a => a.id === activeArticleId);
+      if (activeArt) {
+        renderSingleArticleView(activeArt);
+      }
+    }
+
+    function renderSingleArticleView(art) {
+      const vocabHtml = art.extraVocab && art.extraVocab.length > 0 
+        ? art.extraVocab.map(v => `<span class="inline-block bg-amber-50 text-amber-800 text-[11px] font-medium px-2 py-0.5 rounded-md border border-amber-200/60">${v}</span>`).join(" ")
+        : `<span class="text-xs text-slate-400">無超綱單字</span>`;
+
+      articleViewport.innerHTML = `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+          
+          <!-- Article Top Banner -->
+          <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-100 text-indigo-700">${art.page || "教材篇章"}</span>
+                <h3 class="font-bold text-slate-900 text-lg sm:text-xl">${art.title}</h3>
+              </div>
+              <p class="text-xs text-slate-500 mt-1 flex items-center gap-2">
+                <span><i class="fa-solid fa-font text-slate-400 mr-1"></i>字數：${art.wordCount || 150} 字</span>
+                <span>&bull;</span>
+                <span><i class="fa-solid fa-list-check text-slate-400 mr-1"></i>測驗題：${art.questions ? art.questions.length : 0} 題</span>
+              </p>
+            </div>
+
+            <!-- Level 4 Tabs: Mode Switcher -->
+            <div class="inline-flex p-1 bg-slate-200/80 rounded-xl text-xs font-semibold">
+              <button id="tab-btn-passage" onclick="switchContentMode('passage')" class="px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                currentMode === 'passage' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }">
+                <i class="fa-solid fa-book-open"></i> 文章閱覽 (Passage)
+              </button>
+              <button id="tab-btn-quiz" onclick="switchContentMode('quiz')" class="px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                currentMode === 'quiz' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }">
+                <i class="fa-solid fa-circle-question"></i> 素養測驗 (Quiz)
+              </button>
+            </div>
+          </div>
+
+          <!-- Vocabulary Strip -->
+          <div class="px-5 py-2.5 bg-slate-50/30 border-b border-slate-100 flex items-center flex-wrap gap-1.5 text-xs">
+            <span class="text-slate-500 font-medium mr-1"><i class="fa-solid fa-tag text-slate-400 text-[10px]"></i> 超範單字:</span>
+            ${vocabHtml}
+          </div>
+
+          <!-- Section 1: Passage -->
+          <div id="section-passage" class="${currentMode === 'passage' ? '' : 'hidden'}">
+            <!-- Audio Bar -->
+            <div class="bg-indigo-50/50 border-b border-indigo-100/70 px-5 py-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center flex-wrap gap-2.5">
+                  <button id="play-btn" onclick="handlePlayToggle()" class="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs transition shadow-xs">
+                    <i class="fa-solid fa-play text-xs"></i>
+                    <span class="btn-text">播放朗讀</span>
+                  </button>
+
+                  <button onclick="stopAudio()" class="inline-flex items-center justify-center px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs transition shadow-2xs" title="停止播放">
+                    <i class="fa-solid fa-square text-xs text-slate-500"></i>
+                  </button>
+
+                  <div id="soundwave" class="hidden items-center gap-1 h-5 px-2 bg-indigo-100/70 rounded-md">
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="text-[11px] font-semibold text-indigo-700 ml-1">朗讀中...</span>
+                  </div>
+
+                  <div class="flex items-center bg-white border border-slate-200 rounded-lg p-0.5 text-xs">
+                    <span class="px-1.5 text-[11px] text-slate-400 font-medium"><i class="fa-solid fa-gauge-high mr-1"></i>語速</span>
+                    <button onclick="changePlaybackSpeed(0.75)" id="speed-075" class="px-2 py-0.5 rounded text-slate-600 hover:text-indigo-600 text-[11px] font-semibold">0.75x</button>
+                    <button onclick="changePlaybackSpeed(1.0)" id="speed-100" class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-bold text-[11px]">1.0x</button>
+                    <button onclick="changePlaybackSpeed(1.25)" id="speed-125" class="px-2 py-0.5 rounded text-slate-600 hover:text-indigo-600 text-[11px] font-semibold">1.25x</button>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2 text-xs">
+                  <div class="inline-flex items-center bg-white/90 border border-slate-200 rounded-lg p-1 text-[11px]">
+                    <button onclick="switchAudioMode('tts')" id="mode-tts" class="px-2 py-0.5 rounded font-semibold text-indigo-700 bg-indigo-50">
+                      <i class="fa-solid fa-robot mr-1"></i>AI 朗讀
+                    </button>
+                    <button onclick="switchAudioMode('custom')" id="mode-custom" class="px-2 py-0.5 rounded font-medium text-slate-600 hover:text-slate-900">
+                      <i class="fa-solid fa-file-audio mr-1"></i>錄音檔
+                    </button>
+                  </div>
+
+                  <label class="cursor-pointer text-slate-500 hover:text-indigo-600 bg-white border border-slate-200 px-2 py-1 rounded-lg text-[11px] flex items-center gap-1 shadow-2xs transition" title="更換或上傳自訂 MP3 檔">
+                    <i class="fa-solid fa-upload text-[10px]"></i>
+                    <span>掛載音檔</span>
+                    <input type="file" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
+                  </label>
+                </div>
+              </div>
+
+              <audio id="native-audio" class="hidden" src="${art.audioUrl || ''}" preload="none"></audio>
+            </div>
+
+            <!-- Passage Content -->
+            <div class="p-6 sm:p-8 text-slate-800 leading-relaxed text-base sm:text-lg">
+              <div class="bg-indigo-50/20 rounded-2xl p-6 border border-indigo-100/60 leading-loose">
+                <p id="text-container" class="whitespace-pre-line tracking-wide font-sans">${wrapPassageSentences(art.passage)}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Level 5 Quiz -->
+          <div id="section-quiz" class="${currentMode === 'quiz' ? '' : 'hidden'} p-6 sm:p-8 bg-slate-50/50">
+            <div class="flex items-center justify-between mb-6 pb-3 border-b border-slate-200">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-clipboard-question text-indigo-600 text-lg"></i>
+                <h4 class="font-bold text-slate-900 text-base">閱讀理解素養評量</h4>
+                <span class="text-xs text-slate-500">（請點選選項即時檢驗答題結果與解析）</span>
+              </div>
+              <button onclick="resetQuiz('${art.id}')" class="text-xs text-slate-500 hover:text-indigo-600 transition flex items-center gap-1">
+                <i class="fa-solid fa-arrow-rotate-left"></i> 重置本篇答案
+              </button>
+            </div>
+
+            <!-- Questions -->
+            <div class="space-y-6">
+              ${renderQuizQuestions(art)}
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    window.switchContentMode = function(mode) {
+      currentMode = mode;
+      const passageSec = document.getElementById("section-passage");
+      const quizSec = document.getElementById("section-quiz");
+      const tabPassage = document.getElementById("tab-btn-passage");
+      const tabQuiz = document.getElementById("tab-btn-quiz");
+
+      if (mode === "passage") {
+        passageSec.classList.remove("hidden");
+        quizSec.classList.add("hidden");
+        tabPassage.className = "px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-white text-indigo-700 shadow-xs";
+        tabQuiz.className = "px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-600 hover:text-slate-900";
+      } else {
+        passageSec.classList.add("hidden");
+        quizSec.classList.remove("hidden");
+        tabQuiz.className = "px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-white text-indigo-700 shadow-xs";
+        tabPassage.className = "px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-600 hover:text-slate-900";
+      }
+    };
+
+    function renderQuizQuestions(art) {
+      if (!art.questions || art.questions.length === 0) {
+        return `<p class="text-sm text-slate-400 italic">本篇章尚無內建測驗題。</p>`;
+      }
+
+      const answeredMap = userAnswers[art.id] || {};
+
+      return art.questions.map((qObj, qIdx) => {
+        const userChoice = answeredMap[qIdx];
+        const isAnswered = userChoice !== undefined;
+        const correctOptLetter = qObj.ans.replace(/[\(\)]/g, '').trim();
+        const isCorrect = isAnswered && userChoice.startsWith(`(${correctOptLetter})`);
+
+        return `
+          <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs transition">
+            <div class="flex items-start gap-2.5 mb-3">
+              <span class="w-6 h-6 rounded-md bg-indigo-50 text-indigo-600 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                ${qIdx + 1}
+              </span>
+              <p class="font-bold text-slate-900 text-sm sm:text-base leading-relaxed">${qObj.q}</p>
+            </div>
+
+            <!-- Options Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-8">
+              ${qObj.options.map(opt => {
+                const optLetter = opt.substring(1, 2);
+                let optStyle = "border-slate-200 hover:bg-slate-50 text-slate-700";
+
+                if (isAnswered) {
+                  const isThisSelected = userChoice === opt;
+                  const isThisCorrect = optLetter === correctOptLetter;
+
+                  if (isThisCorrect) {
+                    optStyle = "bg-emerald-50 border-emerald-400 text-emerald-800 font-semibold";
+                  } else if (isThisSelected && !isCorrect) {
+                    optStyle = "bg-rose-50 border-rose-400 text-rose-800 line-through";
+                  } else {
+                    optStyle = "opacity-60 border-slate-200 text-slate-400";
+                  }
+                }
+
+                return `
+                  <button type="button" 
+                    onclick="handleOptionClick('${art.id}', ${qIdx}, '${opt.replace(/'/g, "\\'")}')" 
+                    class="text-left p-3 rounded-lg border text-sm transition-all duration-150 flex items-center justify-between ${optStyle}">
+                    <span>${opt}</span>
+                    ${isAnswered && optLetter === correctOptLetter ? '<i class="fa-solid fa-circle-check text-emerald-600 ml-2"></i>' : ''}
+                    ${isAnswered && userChoice === opt && !isCorrect ? '<i class="fa-solid fa-circle-xmark text-rose-600 ml-2"></i>' : ''}
+                  </button>
+                `;
+              }).join("")}
+            </div>
+
+            <!-- Answer Feedback & Explanation -->
+            ${isAnswered ? `
+              <div class="mt-4 pl-8">
+                <div class="p-3.5 rounded-xl border ${isCorrect ? 'bg-emerald-50/70 border-emerald-200' : 'bg-amber-50/70 border-amber-200'}">
+                  <div class="flex items-center gap-2 mb-1.5">
+                    <span class="text-xs font-bold px-2 py-0.5 rounded ${isCorrect ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}">
+                      ${isCorrect ? '✓ 答對了！' : '✗ 答錯了！'}
+                    </span>
+                    <span class="text-xs font-semibold text-slate-700">正確答案：${qObj.ans}</span>
+                  </div>
+                  <p class="text-xs text-slate-600 leading-relaxed">
+                    <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i>
+                    <strong class="text-slate-800">解析：</strong>${qObj.explain || "請依據前後文判斷關鍵文法或語意。"}
+                  </p>
+                </div>
+              </div>
+            ` : ''}
+
+          </div>
+        `;
+      }).join("");
+    }
+
+    window.handleOptionClick = function(articleId, questionIndex, selectedOption) {
+      if (!userAnswers[articleId]) userAnswers[articleId] = {};
+      userAnswers[articleId][questionIndex] = selectedOption;
+
+      const art = curriculumData.articles.find(a => a.id === articleId);
+      if (art) {
+        document.getElementById("section-quiz").querySelector(".space-y-6").innerHTML = renderQuizQuestions(art);
+      }
+    };
+
+    window.resetQuiz = function(articleId) {
+      if (userAnswers[articleId]) {
+        delete userAnswers[articleId];
+        const art = curriculumData.articles.find(a => a.id === articleId);
+        if (art) {
+          document.getElementById("section-quiz").querySelector(".space-y-6").innerHTML = renderQuizQuestions(art);
+        }
+      }
+    };
+
+    function wrapPassageSentences(text) {
+      if (!text) return "";
+      const sentenceRegex = /([^.?!]+[.?!]+)/g;
+      let counter = 0;
+      return text.replace(sentenceRegex, (match) => {
+        const id = `sentence-${counter++}`;
+        return `<span id="${id}" class="sentence-token transition-colors duration-150">${match}</span>`;
+      });
+    }
+
+    window.handlePlayToggle = function() {
+      const art = curriculumData.articles.find(a => a.id === activeArticleId);
+      if (!art) return;
+
+      if (audioState.mode === 'tts') {
+        toggleTTS(art);
+      } else {
+        toggleNativeAudio();
+      }
+    };
+
+    function toggleTTS(art) {
+      if (!('speechSynthesis' in window)) {
+        alert("瀏覽器暫不支援 Web Speech 語音合成。");
+        return;
+      }
+
+      if (window.speechSynthesis.paused && audioState.isPaused) {
+        window.speechSynthesis.resume();
+        audioState.isPaused = false;
+        audioState.isPlaying = true;
+        updateAudioUI(true);
+        return;
+      }
+
+      if (window.speechSynthesis.speaking && audioState.isPlaying) {
+        window.speechSynthesis.pause();
+        audioState.isPaused = true;
+        audioState.isPlaying = false;
+        updateAudioUI(false, true);
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      clearHighlight();
+
+      const utterance = new SpeechSynthesisUtterance(art.passage);
+      utterance.lang = "en-US";
+      utterance.rate = audioState.rate || 1.0;
+      if (audioState.selectedVoice) utterance.voice = audioState.selectedVoice;
+
+      utterance.onboundary = function(event) {
+        if (event.name === 'sentence' || event.name === 'word') {
+          highlightSentenceAtChar(art.passage, event.charIndex);
+        }
+      };
+
+      utterance.onstart = function() {
+        audioState.isPlaying = true;
+        audioState.isPaused = false;
+        updateAudioUI(true);
+      };
+
+      utterance.onend = function() {
+        audioState.isPlaying = false;
+        audioState.isPaused = false;
+        updateAudioUI(false);
+        clearHighlight();
+      };
+
+      utterance.onerror = function() {
+        audioState.isPlaying = false;
+        audioState.isPaused = false;
+        updateAudioUI(false);
+        clearHighlight();
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function toggleNativeAudio() {
+      const audioEl = document.getElementById("native-audio");
+      if (!audioEl || !audioEl.src || audioEl.src === window.location.href) {
+        switchAudioMode('tts');
+        const art = curriculumData.articles.find(a => a.id === activeArticleId);
+        if (art) toggleTTS(art);
+        return;
+      }
+
+      audioEl.playbackRate = audioState.rate || 1.0;
+
+      if (audioEl.paused) {
+        audioEl.play().then(() => {
+          audioState.isPlaying = true;
+          audioState.isPaused = false;
+          updateAudioUI(true);
+        });
+        audioEl.onended = () => {
+          audioState.isPlaying = false;
+          audioState.isPaused = false;
+          updateAudioUI(false);
+        };
+      } else {
+        audioEl.pause();
+        audioState.isPlaying = false;
+        audioState.isPaused = true;
+        updateAudioUI(false, true);
+      }
+    }
+
+    window.stopAudio = function() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      const audioEl = document.getElementById("native-audio");
+      if (audioEl) {
+        audioEl.pause();
+        audioEl.currentTime = 0;
+      }
+      audioState.isPlaying = false;
+      audioState.isPaused = false;
+      updateAudioUI(false);
+      clearHighlight();
+    };
+
+    window.changePlaybackSpeed = function(speed) {
+      audioState.rate = speed;
+      [0.75, 1.0, 1.25].forEach(s => {
+        const idKey = s.toString().replace('.', '');
+        const btn = document.getElementById(`speed-${idKey}`);
+        if (btn) {
+          btn.className = (s === speed) 
+            ? "px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-bold text-[11px]" 
+            : "px-2 py-0.5 rounded text-slate-600 hover:text-indigo-600 text-[11px] font-semibold";
+        }
+      });
+
+      if (audioState.isPlaying && audioState.mode === 'tts') {
+        const art = curriculumData.articles.find(a => a.id === activeArticleId);
+        if (art) {
+          window.speechSynthesis.cancel();
+          toggleTTS(art);
+        }
+      } else {
+        const audioEl = document.getElementById("native-audio");
+        if (audioEl) audioEl.playbackRate = speed;
+      }
+    };
+
+    window.switchAudioMode = function(mode) {
+      audioState.mode = mode;
+      const ttsBtn = document.getElementById("mode-tts");
+      const customBtn = document.getElementById("mode-custom");
+      const audioEl = document.getElementById("native-audio");
+
+      stopAudio();
+
+      if (mode === 'tts') {
+        ttsBtn.className = "px-2 py-0.5 rounded font-semibold text-indigo-700 bg-indigo-50";
+        customBtn.className = "px-2 py-0.5 rounded font-medium text-slate-600 hover:text-slate-900";
+      } else {
+        if (!audioEl.src || audioEl.src === window.location.href) {
+          const promptUrl = prompt("請輸入音檔連結 (MP3 網址) 或點選「掛載音檔」上傳：", "");
+          if (promptUrl && promptUrl.trim()) {
+            audioEl.src = promptUrl.trim();
+          } else {
+            return;
+          }
+        }
+        customBtn.className = "px-2 py-0.5 rounded font-semibold text-indigo-700 bg-indigo-50";
+        ttsBtn.className = "px-2 py-0.5 rounded font-medium text-slate-600 hover:text-slate-900";
+      }
+    };
+
+    window.handleFileUpload = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const objectUrl = URL.createObjectURL(file);
+      const audioEl = document.getElementById("native-audio");
+      if (audioEl) {
+        audioEl.src = objectUrl;
+        switchAudioMode('custom');
+        alert(`已成功掛載音檔：${file.name}，可立即播放！`);
+      }
+    };
+
+    function updateAudioUI(isPlaying, isPaused = false) {
+      const playBtn = document.getElementById("play-btn");
+      const soundwave = document.getElementById("soundwave");
+      if (!playBtn) return;
+
+      const btnText = playBtn.querySelector(".btn-text");
+      const icon = playBtn.querySelector("i");
+
+      if (isPlaying) {
+        playBtn.className = "inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs transition shadow-xs";
+        btnText.textContent = "暫停朗讀";
+        icon.className = "fa-solid fa-pause text-xs";
+        if (soundwave) soundwave.classList.remove("hidden"), soundwave.classList.add("flex");
+      } else if (isPaused) {
+        playBtn.className = "inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs transition shadow-xs";
+        btnText.textContent = "繼續朗讀";
+        icon.className = "fa-solid fa-play text-xs";
+        if (soundwave) soundwave.classList.add("hidden"), soundwave.classList.remove("flex");
+      } else {
+        playBtn.className = "inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs transition shadow-xs";
+        btnText.textContent = "播放朗讀";
+        icon.className = "fa-solid fa-play text-xs";
+        if (soundwave) soundwave.classList.add("hidden"), soundwave.classList.remove("flex");
+      }
+    }
+
+    function highlightSentenceAtChar(fullText, charIndex) {
+      const container = document.getElementById("text-container");
+      if (!container) return;
+      const tokens = container.querySelectorAll(".sentence-token");
+      let accumLength = 0;
+      tokens.forEach((span) => {
+        const textLength = span.textContent.length;
+        if (charIndex >= accumLength && charIndex < accumLength + textLength) {
+          span.classList.add("reading-highlight");
+        } else {
+          span.classList.remove("reading-highlight");
+        }
+        accumLength += textLength;
+      });
+    }
+
+    function clearHighlight() {
+      const container = document.getElementById("text-container");
+      if (!container) return;
+      container.querySelectorAll(".sentence-token").forEach(span => span.classList.remove("reading-highlight"));
+    }
+
+    // Modal Handler
+    addArticleModalBtn.addEventListener("click", () => {
+      document.getElementById("modal-semester").value = currentSemesterId;
+      addModal.classList.remove("hidden");
+    });
+    closeModalBtn.addEventListener("click", () => addModal.classList.add("hidden"));
+    cancelModalBtn.addEventListener("click", () => addModal.classList.add("hidden"));
+
+    addArticleForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const sem = document.getElementById("modal-semester").value;
+      const cat = document.getElementById("modal-category").value;
+      const title = document.getElementById("modal-title").value.trim();
+      const page = document.getElementById("modal-page").value.trim() || "自訂篇章";
+      const words = parseInt(document.getElementById("modal-words").value, 10) || 120;
+      const vocabRaw = document.getElementById("modal-vocab").value.trim();
+      const audioUrl = document.getElementById("modal-audio-url").value.trim();
+      const content = document.getElementById("modal-content").value.trim();
+
+      const vocabList = vocabRaw ? vocabRaw.split(",").map(s => s.trim()).filter(Boolean) : [];
+
+      const newArticle = {
+        id: "art-" + Date.now(),
+        semesterId: sem,
+        categoryId: cat,
+        page: page,
+        title: title,
+        wordCount: words,
+        audioUrl: audioUrl || null,
+        extraVocab: vocabList,
+        passage: content,
+        questions: [
+          {
+            q: "What is the main topic of the reading?",
+            options: ["(A) A story about friends.", "(B) General discussion.", "(C) Personal reflection.", "(D) Daily activities."],
+            ans: "(B)",
+            explain: "根據文章主要語意與主旨進行判斷。"
+          }
+        ]
+      };
+
+      curriculumData.articles.unshift(newArticle);
+
+      currentSemesterId = sem;
+      currentCategoryId = cat;
+      activeArticleId = newArticle.id;
+      currentMode = "passage";
+
+      renderSemesterTabs();
+      renderCategoryTabs();
+      renderArticleTabsAndContent();
+
+      addArticleForm.reset();
+      addModal.classList.add("hidden");
+    });
+
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderArticleTabsAndContent();
+    });
+
+    window.onload = function() {
+      renderSemesterTabs();
+      renderCategoryTabs();
+      renderArticleTabsAndContent();
+    };
+  </script>
+</body>
+</html>
